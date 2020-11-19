@@ -34,7 +34,7 @@ library("jpeg")
 if (!getwd() == "C:/Users/paulr/Documents/R/slb") {setwd("C:/Users/paulr/Documents/R/slb")}
 
 # Set proper working Dir
-if (!getwd() == "C:/Users/paulr/Documents/R/slb") {setwd("./slb")}
+if (!getwd() == "C:/Users/paulr/Documents/R/slb") {setwd("./slb/slb")}
 
 # Check for data directory and if one is not present then make it
 if (!file.exists("data")) {
@@ -46,7 +46,7 @@ if (!file.exists("data")) {
 ###############################################################################
 #Read in data and fix formats
 
-alldata <- read_csv("./data/starrett-year.csv", col_names = TRUE, col_types = "ccc??ddcdc")
+alldata <- read_csv("./slb/data/starrett-year.csv", col_names = TRUE, col_types = "cddddd")
 alldata$`Start Date`<- mdy(alldata$`Start Date`)
 alldata$`End Date` <- mdy(alldata$`End Date`)
 colnames(alldata)[2] <- "Type"
