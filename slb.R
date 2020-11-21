@@ -46,9 +46,13 @@ if (!file.exists("data")) {
 ###############################################################################
 #Read in data and fix formats
 
+# Get data in
 alldata <- read_csv("./slb/data/starrett-year.csv", col_names = TRUE, col_types = "cddddd")
-alldata$`Start Date`<- mdy(alldata$`Start Date`)
-alldata$`End Date` <- mdy(alldata$`End Date`)
-colnames(alldata)[2] <- "Type"
-units <- data.frame("Type" = unique(alldata$Type), "unit" = c("kWh", "MLbs", "hcf", "hcf", "hcf", "gal", "Therms", "hcf"))
-alldata <- alldata %>% select(-Units) %>% left_join(units, by = "Type")
+alldata$Timestamp <-ymd_hms(str_sub(alldata$Timestamp, start = 1L, end = 19)) #Get timestamp readable
+colSums(is.na(alldata)) # Check for NA's
+alldata <- alldata %>% mutate(`Active Power Sum` = rowSums(alldata[,2:6])) 
+alldata <- alldata[complete.cases(alldata),] #get rid of na's 
+
+# Make a timeseries object
+TS_alldata <- alldata %>% as_tsibble(index = Timestamp, regular = TRUE)
+autoplot(TS_alldata$`Active Power Sum`)
