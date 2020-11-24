@@ -47,12 +47,25 @@ if (!file.exists("data")) {
 #Read in data and fix formats
 
 # Get data in
-alldata <- read_csv("./slb/data/starrett-year.csv", col_names = TRUE, col_types = "cddddd")
+alldata <- read_csv("./slb/data/starrett-year.csv", col_names = TRUE, col_types = "cnnnnn")
 alldata$Timestamp <-ymd_hms(str_sub(alldata$Timestamp, start = 1L, end = 19)) #Get timestamp readable
 colSums(is.na(alldata)) # Check for NA's
 alldata <- alldata %>% mutate(`Active Power Sum` = rowSums(alldata[,2:6])) 
 alldata <- alldata[complete.cases(alldata),] #get rid of na's 
 
-# Make a timeseries object
+###############################################################################
+                          # Time Series Work #
+###############################################################################
+
+
 TS_alldata <- alldata %>% as_tsibble(index = Timestamp, regular = TRUE)
-autoplot(TS_alldata$`Active Power Sum`)
+
+ggplot(alldata, aes(Timestamp)) +
+  geom_line(aes(y = `MasterMeter-Triacta Meter 1 Active Power`, color = "blue")) +
+  geom_line(aes(y = `MasterMeter-Triacta Meter 2 Active Power`, color = "red")) +
+  geom_line(aes(y = `MasterMeter-Triacta Meter 3 Active Power`, color = "purple")) +
+  geom_line(aes(y = `MasterMeter-Triacta Meter 4 Active Power`, color = "yellow")) +
+  geom_line(aes(y = `MasterMeter-Triacta Meter 5 Active Power`, color = "green")) +
+  geom_line(aes(y = `Active Power Sum`, color = "black")) 
+
+
