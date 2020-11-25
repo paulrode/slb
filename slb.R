@@ -53,6 +53,14 @@ colSums(is.na(alldata)) # Check for NA's
 alldata <- alldata %>% mutate(`Active Power Sum` = rowSums(alldata[,2:6])) 
 alldata <- alldata[complete.cases(alldata),] #get rid of na's 
 
+WeatherDataNYC <- read_csv("./slb/data/WeatherDataNYC.csv", col_names = TRUE)
+WeatherDataNYC$`Date/Time` <- mdy_hm(WeatherDataNYC$`Date/Time`)
+colnames(WeatherDataNYC)[1] = "Timestamp"
+
+Weather <- WeatherDataNYC %>% filter(Timestamp >= min(alldata$Timestamp) & Timestamp <= max(alldata$Timestamp))
+alldata <- left_join(alldata, Weather,  by = "Timestamp")
+
+
 ###############################################################################
                           # Time Series Work #
 ###############################################################################
@@ -69,3 +77,9 @@ ggplot(alldata, aes(Timestamp)) +
   geom_line(aes(y = `Active Power Sum`, color = "black")) 
 
 
+ggplot(alldata, aes(Timestamp)) +
+  geom_line(aes(y = (Temp)))
+
+
+ggplot(alldata, aes(Temp)) +
+  geom_point(aes(y =`Active Power Sum`)) 
