@@ -81,5 +81,12 @@ ggplot(alldata, aes(Timestamp)) +
   geom_line(aes(y = (Temp)))
 
 
-ggplot(alldata, aes(Temp)) +
-  geom_point(aes(y =`Active Power Sum`)) 
+ggplot(alldata, aes(Temp,`Active Power Sum` )) +
+  geom_smooth(span = .0005 )
+
+
+alldata %>% filter(wday(alldata$Timestamp) > 1 & wday(alldata$Timestamp) < 7 & 
+                     (hour(alldata$Timestamp) > 8 & hour(alldata$Timestamp) < 20)) %>%
+  ggplot(aes(Temp)) +
+  geom_point(aes( y = `Active Power Sum`))
+
