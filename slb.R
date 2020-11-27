@@ -78,15 +78,21 @@ ggplot(alldata, aes(Timestamp)) +
 
 
 ggplot(alldata, aes(Timestamp)) +
-  geom_line(aes(y = (Temp)))
+  geom_line(aes(y = (Temp))) +
+  geom_line(aes( y = Enthalpy, color = "blue"))
+
+alldata$Temp <- as.double(alldata$Temp)
+ggplot(alldata, aes(Temp, `Active Power Sum` )) +
+  geom_smooth(color = "black") + # Showing relationship with Temp
+  geom_smooth(aes(WB, `Active Power Sum` )) #Showing relationsip with WB
+
+alldata$Temp <- as.factor(alldata$Temp)
+alldata %>% ggplot() +
+  geom_boxplot(aes(x = Temp, y = `Active Power Sum`)) + # adding box plots
+  geom_smooth(aes(x = WB, y = `Active Power Sum`)) # adding wet bulb
 
 
-ggplot(alldata, aes(Temp,`Active Power Sum` )) +
-  geom_smooth(span = .0005 )
+ggplot(alldata, aes(WB, `Active Power Sum`)) + 
+  geom_point()
 
-
-alldata %>% filter(wday(alldata$Timestamp) > 1 & wday(alldata$Timestamp) < 7 & 
-                     (hour(alldata$Timestamp) > 8 & hour(alldata$Timestamp) < 20)) %>%
-  ggplot(aes(Temp)) +
-  geom_point(aes( y = `Active Power Sum`))
 
