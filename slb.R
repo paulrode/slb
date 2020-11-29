@@ -59,6 +59,7 @@ colnames(WeatherDataNYC)[1] = "Timestamp"
 
 Weather <- WeatherDataNYC %>% filter(Timestamp >= min(alldata$Timestamp) & Timestamp <= max(alldata$Timestamp))
 alldata <- left_join(alldata, Weather,  by = "Timestamp")
+alldata <- alldata %>% distinct()
 
 
 ###############################################################################
@@ -66,7 +67,7 @@ alldata <- left_join(alldata, Weather,  by = "Timestamp")
 ###############################################################################
 
 
-TS_alldata <- alldata %>% as_tsibble(index = Timestamp, regular = TRUE)
+TS_alldata <- alldata %>% as_tsibble(index = Timestamp, key = `Active Power Sum`, regular = TRUE)
 
 ggplot(alldata, aes(Timestamp)) +
   geom_line(aes(y = `MasterMeter-Triacta Meter 1 Active Power`, color = "blue")) +
@@ -83,7 +84,7 @@ ggplot(alldata, aes(Timestamp)) +
 
 alldata$Temp <- as.double(alldata$Temp)
 ggplot(alldata, aes(Temp, `Active Power Sum` )) +
-  geom_smooth(color = "black") + # Showing relationship with Temp
+  geom_smooth(color = "red") + # Showing relationship with Temp
   geom_smooth(aes(WB, `Active Power Sum` )) #Showing relationsip with WB
 
 alldata$Temp <- as.factor(alldata$Temp)
