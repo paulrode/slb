@@ -90,8 +90,13 @@ ggplot(alldata, aes(Temp, `Active Power Sum` )) +
 alldata$Temp <- as.factor(alldata$Temp)
 alldata %>% ggplot() +
   geom_boxplot(aes(x = Temp, y = `Active Power Sum`)) + # adding box plots
-  geom_smooth(aes(x = WB, y = `Active Power Sum`)) # adding wet bulb
+  geom_smooth(aes(x = WB, y = `Active Power Sum`, color = "black")) # adding wet bulb 
+  geom_smooth() #adding temp line
 
+alldata %>% filter(as.integer(Temp > 55)) %>%  ggplot() +
+  geom_boxplot(aes(x = Temp, y = `Active Power Sum`)) + # adding box plots
+  geom_smooth(aes(x = WB, y = `Active Power Sum`, color = "black")) # adding wet bulb 
+geom_smooth() #adding temp line
 
 ggplot(alldata, aes(WB, `Active Power Sum`)) + 
   geom_point()
