@@ -99,6 +99,9 @@ alldata %>% filter(as.integer(Temp > 55)) %>%  ggplot() +
 geom_smooth() #adding temp line
 
 ggplot(alldata, aes(WB, `Active Power Sum`)) + 
-  geom_point()
+  geom_point(alpha = 0.05)
+
+ggplot(alldata, aes(WB, `Active Power Sum`)) + 
+  geom_point(shape =  ".")
 
 
